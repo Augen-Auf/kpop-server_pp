@@ -3,11 +3,11 @@ const ApiError = require('../error/ApiError');
 
 class CommentController {
     async create(req, res) {
-        const {text, parent_id, user_id, publication_id} = req.body;
-        const newComment = await Comment.create({text, parent_id, likes:0, dislikes:0, user_id, publication_id})
+        const {text, parent_id, user_uid, publication_id} = req.body;
+        const newComment = await Comment.create({text, parent_id, likes:0, dislikes:0, user_uid, publication_id})
             .then(async(comment) => {
 
-            comment.dataValues['user'] = await User.findOne({where:{id: user_id}, attributes:['id', 'name']})
+            comment.dataValues['user'] = await User.findOne({where:{id: user_uid}, attributes:['id', 'name']})
             return comment;
         })
         return res.json(newComment)
@@ -26,13 +26,13 @@ class CommentController {
     async setCommentRating(req, res) {
         const commentId = req.params.commentId;
         const {userId, action, choice} = req.body;
-        const rating = await CommentRating.findOne({where: {comment_id: commentId, user_id: userId}})
+        const rating = await CommentRating.findOne({where: {comment_id: commentId, user_uid: userId}})
             .then(async (comment) => {
                 if(action === 'set')
                     if(comment)
                         return await comment.update({choice: choice})
                     else
-                        return await CommentRating.create({comment_id: commentId, user_id: userId, choice})
+                        return await CommentRating.create({comment_id: commentId, user_uid: userId, choice})
                 else
                     return await comment.destroy()
             })
@@ -42,7 +42,7 @@ class CommentController {
 
     async update(req, res) {
         const id = req.params.id;
-        const {text, date, time, parent_id, likes, dislikes, user_id, publication_id} = req.body;
+        const {text, date, time, parent_id, likes, dislikes, user_uid, publication_id} = req.body;
         let comment = await Comment.findByPk(id);
 
         comment.text = text;
@@ -51,7 +51,7 @@ class CommentController {
         comment.parent_id = parent_id;
         comment.likes = likes;
         comment.dislikes = dislikes;
-        comment.user_id = user_id;
+        comment.user_uid = user_uid;
         comment.publication_id = publication_id;
 
         const new_comment = await Comment.save();

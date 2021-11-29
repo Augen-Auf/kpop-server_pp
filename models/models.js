@@ -2,10 +2,9 @@ const sequelize = require('../db');
 const {DataTypes} = require('sequelize');
 
 const User = sequelize.define('user', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    email: {type: DataTypes.STRING, unique: true},
-    name: {type: DataTypes.STRING, unique: true},
-    password: {type: DataTypes.STRING},
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    uid: { type: DataTypes.STRING, unique: true },
+    nickname: { type: DataTypes.STRING }
 });
 
 const Avatar = sequelize.define('avatars', {
@@ -74,16 +73,16 @@ const NewsTag = sequelize.define('newsTag', {
 
 Role.hasMany(User, {foreignKey: 'role_id', allowNull: true});
 
-User.hasMany(Viki, {foreignKey: 'author_id', onDelete: 'SET NULL'});
-User.hasMany(Reaction, {foreignKey: 'user_id', onDelete: 'SET NULL'});
-User.hasMany(SavedNews, {foreignKey: 'user_id', onDelete: 'CASCADE'});
-User.hasMany(Comment, {foreignKey: 'user_id', onDelete: 'SET NULL'});
-User.hasMany(News, {foreignKey: 'author_id', onDelete: 'SET NULL'});
-User.hasMany(CommentRating, {foreignKey: 'user_id', onDelete: 'CASCADE'});
-User.hasMany(Reaction, {foreignKey: 'user_id', onDelete: 'SET NULL'});
+User.hasMany(Viki, {foreignKey: 'author_uid', onDelete: 'SET NULL', sourceKey: 'uid'});
+User.hasMany(Reaction, {foreignKey: 'user_uid', onDelete: 'SET NULL', sourceKey: 'uid'});
+User.hasMany(SavedNews, {foreignKey: 'user_uid', onDelete: 'CASCADE', sourceKey: 'uid'});
+User.hasMany(Comment, {foreignKey: 'user_uid', onDelete: 'SET NULL', sourceKey: 'uid'});
+User.hasMany(News, {foreignKey: 'author_uid', onDelete: 'SET NULL', sourceKey: 'uid'});
+User.hasMany(CommentRating, {foreignKey: 'user_uid', onDelete: 'CASCADE', sourceKey: 'uid'});
+User.hasMany(Reaction, {foreignKey: 'user_uid', onDelete: 'SET NULL', sourceKey: 'uid'});
 User.belongsTo(Avatar, {as: 'avatar', allowNull: true, onUpdate:'SET NULL'})
 
-News.belongsTo(User, {foreignKey: 'author_id', onDelete: 'SET NULL'})
+News.belongsTo(User, {foreignKey: 'author_uid', onDelete: 'SET NULL', sourceKey: 'uid'})
 News.belongsTo(Image, {foreignKey: 'image_id', allowNull: true, onDelete: 'SET NULL'})
 News.hasMany(Reaction, {foreignKey: 'publication_id', onDelete: 'CASCADE'});
 News.hasMany(Comment, {foreignKey: 'publication_id', onDelete: 'CASCADE'});
@@ -107,7 +106,7 @@ Viki.hasMany(SavedNews, {
 });
 
 Viki.belongsTo(Image, {foreignKey: 'image_id', allowNull: true, onDelete: 'CASCADE'})
-Viki.belongsTo(User, {foreignKey: 'author_id', onDelete: 'CASCADE'})
+Viki.belongsTo(User, {foreignKey: 'author_uid', onDelete: 'SET NULL', sourceKey: 'uid'})
 
 Comment.hasMany(Comment, {foreignKey: 'parent_id', onDelete: 'SET NULL'})
 Comment.belongsTo(User, {foreignKey: 'user_id', onDelete: 'CASCADE'});

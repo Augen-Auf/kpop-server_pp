@@ -3,7 +3,7 @@ const ApiError = require('../error/ApiError');
 
 class NewsController {
     async create(req, res, next) {
-        const {title, lid, text, type, author_id, tags} = req.body;
+        const {title, lid, text, type, author_uid, tags} = req.body;
         if(!title || !lid || !text) {
             return next(ApiError.badRequest('Отсутсвует заголовок, лид или текст'))
         }
@@ -15,7 +15,7 @@ class NewsController {
             newImageId = await Image.create({image}).then(r => r.id)
         }
 
-        const news = await News.create({title, lid, text, type, views: 1, author_id, image_id: newImageId});
+        const news = await News.create({title, lid, text, type, views: 1, author_uid, image_id: newImageId});
 
         const tagsArray = tags ? tags.split(',').map(item => item.trim().toUpperCase()) : null
         if(tagsArray && tagsArray.length > 0)
@@ -35,7 +35,7 @@ class NewsController {
 
     async update(req, res) {
         const id = req.params.id;
-        let {title, lid, text, type, author_id, tags} = req.body;
+        let {title, lid, text, type, author_uid, tags} = req.body;
         let news = await News.findByPk(id);
         const image = req.files && req.files.image ? req.files.image.data : null
 
@@ -53,7 +53,7 @@ class NewsController {
             }
         }
 
-        const new_news = await news.update({title, lid, text, type, author_id, image_id: newImageId});
+        const new_news = await news.update({title, lid, text, type, author_uid, image_id: newImageId});
 
         const newsTags = await NewsTag.findAll({where: {publication_id: id}, include: Tag})
 

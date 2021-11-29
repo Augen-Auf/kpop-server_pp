@@ -2,8 +2,8 @@ const { Reaction } = require('../models/models')
 
 class ReactionController {
     async create(req, res) {
-        const { emotion, publication_id, user_id } = req.body;
-        const reaction = await Reaction.create({ emotion, publication_id, user_id });
+        const { emotion, publication_id, user_uid } = req.body;
+        const reaction = await Reaction.create({ emotion, publication_id, user_uid });
         return res.json(reaction)
     }
 
@@ -17,8 +17,8 @@ class ReactionController {
     }
 
     async getUserReactionByPublication(req, res) {
-        const { publication_id, user_id } = req.body;
-        const reaction = await Reaction.findOne({where: {publication_id: publication_id, user_id: user_id}});
+        const { publication_id, user_uid } = req.body;
+        const reaction = await Reaction.findOne({where: {publication_id: publication_id, user_uid: user_uid}});
         return res.json(reaction)
     }
 
