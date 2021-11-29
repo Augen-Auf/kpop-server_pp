@@ -24,29 +24,25 @@ class UserController {
     }
 
     async getUserNews(req, res, next) {
-        const { uid } = req.body
-        const { id: userId } = await User.findOne({ where: { uid: uid } })
+        const { id: userId } = req.body
         const news = await News.findAll({where: {author_id: userId, type:'news'}})
         return res.json(news)
     }
 
     async getUserComments(req, res, next) {
-        const { uid } = req.body
-        const { id: userId } = await User.findOne({ where: { uid: uid } })
+        const { id:  userId } = req.body
         const comments = await Comment.findAll({where: {user_id: userId}, include: News})
         return res.json(comments)
     }
 
     async getUserArticles(req, res, next) {
-        const { uid } = req.body
-        const { id: userId } = await User.findOne({ where: { uid: uid } })
+        const { id:  userId } = req.body
         const articles = await News.findAll({where: {author_id: userId, type:'articles'}})
         return res.json(articles)
     }
 
     async getUserVikis(req, res, next) {
-        const { uid } = req.body
-        const { id: userId } = await User.findOne({ where: { uid: uid } })
+        const { id:  userId } = req.body
         const vikis = await Viki.findAll({where: {author_id: userId}})
         return res.json(vikis)
     }

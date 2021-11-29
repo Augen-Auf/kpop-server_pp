@@ -3,13 +3,13 @@ const ApiError = require('../error/ApiError');
 
 class VikiController {
     async create(req, res) {
-        const {author_uid, name, short_description, birthday, info} = req.body;
+        const {author_id, name, short_description, birthday, info} = req.body;
         const image = req.files && req.files.image ? req.files.image.data : null
         let newImageId = null
         if(image) {
             newImageId = await Image.create({image}).then(r => r.id)
         }
-        const newViki = await Viki.create({author_uid, name, short_description, birthday, info, image_id:newImageId})
+        const newViki = await Viki.create({author_id, name, short_description, birthday, info, image_id:newImageId})
         return res.json(newViki)
     }
     async update(req, res) {
