@@ -14,7 +14,7 @@ const userSubscriberRouter = require('./userSubscriberRouter');
 const vikiRouter = require('./vikiRouter');
 
 router.use('/user', userRouter);
-// router.use('/userSubscriber', userSubscriberRouter);
+router.use('/subscription', userSubscriberRouter);
 router.use('/comments', commentRouter);
 router.use('/news', newsRouter);
 router.use('/vikis', vikiRouter);

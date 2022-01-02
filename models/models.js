@@ -70,6 +70,10 @@ const Role = sequelize.define('role', {
 const NewsTag = sequelize.define('newsTag', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 });
+const UserSubscriber = sequelize.define('userSubscribers', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+});
+
 
 Role.hasMany(User, {foreignKey: 'role_id', allowNull: true});
 
@@ -80,6 +84,8 @@ User.hasMany(Comment, {foreignKey: 'user_id', onDelete: 'SET NULL'});
 User.hasMany(News, {foreignKey: 'author_id', onDelete: 'SET NULL'});
 User.hasMany(CommentRating, {foreignKey: 'user_id', onDelete: 'CASCADE'});
 User.hasMany(Reaction, {foreignKey: 'user_id', onDelete: 'SET NULL'});
+User.hasMany(UserSubscriber, {foreignKey: 'author_id', onDelete: 'SET NULL'})
+User.hasMany(UserSubscriber, {foreignKey: 'subscriber_id', onDelete: 'SET NULL'})
 User.belongsTo(Avatar, {as: 'avatar', allowNull: true, onUpdate:'SET NULL'})
 
 News.belongsTo(User, {foreignKey: 'author_id', onDelete: 'SET NULL'})
@@ -123,6 +129,9 @@ Reaction.belongsTo(News, {foreignKey: 'publication_id', onDelete: 'CASCADE'})
 News.belongsToMany(Tag, {through: NewsTag, foreignKey: 'publication_id', onDelete: 'CASCADE'});
 Tag.belongsToMany(News, {through: NewsTag, foreignKey: 'tag_id', onDelete: 'CASCADE'});
 
+UserSubscriber.belongsTo(User, { foreignKey: 'author_id', onDelete: 'CASCADE'});
+UserSubscriber.belongsTo(User, { foreignKey: 'subscriber_id', onDelete: 'CASCADE'});
+
 NewsTag.belongsTo(Tag, {foreignKey: 'tag_id', onDelete: 'CASCADE'})
 
 
@@ -138,5 +147,6 @@ module.exports = {
     SavedNews,
     Tag,
     Avatar,
-    NewsTag
+    NewsTag,
+    UserSubscriber
 };
