@@ -103,8 +103,9 @@ class NewsController {
                     through: NewsTag
                 }
             ]});
+
         news = await news.update({views: news.views + 1})
-        return res.json({news})
+        return res.json(news)
     }
 
     async getAll(req, res) {
