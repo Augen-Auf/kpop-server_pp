@@ -5,7 +5,7 @@ const imageRouter = require('./imageRouter');
 const newsRouter = require('./newsRouter');
 const newsTagRouter = require('./newsTagRouter');
 const reactionRouter = require('./reactionRouter');
-const roleRouter = require('./roleRouter');
+const testsRouter = require('./testsRouter');
 const savedNewsRouter = require('./savedNewsRouter');
 const tagRouter = require('./tagRouter');
 const userRouter = require('./userRouter');
@@ -20,7 +20,7 @@ router.use('/news', newsRouter);
 router.use('/vikis', vikiRouter);
 router.use('/tags', tagRouter);
 router.use('/avatar', avatarRouter)
-// router.use('/savedNews', savedNewsRouter);
+router.use('/tests', testsRouter);
 // router.use('/role', roleRouter);
 // router.use('/newsTag', newsTagRouter);
 router.use('/images', imageRouter);

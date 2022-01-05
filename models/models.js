@@ -67,6 +67,20 @@ const Role = sequelize.define('role', {
     moderate_access: {type: DataTypes.BOOLEAN}
 });
 
+const Test = sequelize.define('test', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING },
+    description: { type: DataTypes.TEXT },
+    questions: {type: DataTypes.TEXT },
+    answers:  { type: DataTypes.TEXT },
+    correct_answers: { type: DataTypes.TEXT },
+})
+
+const TestResults = sequelize.define('testResult',{
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    score: { type: DataTypes.INTEGER }
+})
+
 const NewsTag = sequelize.define('newsTag', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 });
@@ -85,7 +99,9 @@ User.hasMany(News, {foreignKey: 'author_id', onDelete: 'SET NULL'});
 User.hasMany(CommentRating, {foreignKey: 'user_id', onDelete: 'CASCADE'});
 User.hasMany(Reaction, {foreignKey: 'user_id', onDelete: 'SET NULL'});
 User.hasMany(UserSubscriber, {foreignKey: 'author_id', as: 'author', onDelete: 'SET NULL'})
-User.hasMany(UserSubscriber, {foreignKey: 'subscriber_id', onDelete: 'SET NULL'})
+User.hasMany(UserSubscriber, {foreignKey: 'subscriber_id', as: 'subscriber', onDelete: 'SET NULL'})
+User.hasMany(TestResults, {foreignKey: 'user_id', as: 'user', onDelete: 'SET NULL'})
+User.hasMany(Test, {foreignKey: 'author_id', onDelete: 'SET NULL'})
 User.belongsTo(Avatar, {as: 'avatar', allowNull: true, onUpdate:'SET NULL'})
 
 News.belongsTo(User, {foreignKey: 'author_id', onDelete: 'SET NULL'})
@@ -118,6 +134,8 @@ Comment.hasMany(Comment, {foreignKey: 'parent_id', onDelete: 'SET NULL'})
 Comment.belongsTo(User, {foreignKey: 'user_id', onDelete: 'CASCADE'});
 Comment.belongsTo(News, {foreignKey: 'publication_id', onDelete: 'CASCADE'});
 
+Test.hasMany(TestResults, { foreignKey: 'test_id', as: 'test', onDelete: 'CASCADE' })
+Test.belongsTo(User, { foreignKey: 'author_id', onDelete: 'CASCADE' })
 
 CommentRating.belongsTo(Comment, {foreignKey: 'comment_id', onDelete: 'SET NULL'});
 CommentRating.belongsTo(User, {foreignKey: 'user_id', onDelete: 'SET NULL'});
@@ -134,6 +152,8 @@ UserSubscriber.belongsTo(User, { foreignKey: 'subscriber_id', as: 'subscriber', 
 
 NewsTag.belongsTo(Tag, {foreignKey: 'tag_id', onDelete: 'CASCADE'})
 
+TestResults.belongsTo(User, { foreignKey: 'user_id', as: 'user', onDelete: 'CASCADE' })
+TestResults.belongsTo(Test, { foreignKey: 'test_id', as: 'test', onDelete: 'CASCADE' })
 
 module.exports = {
     User,
