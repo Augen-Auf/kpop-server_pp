@@ -5,20 +5,26 @@ const { Op } = require("sequelize");
 class UserController {
     async createUser(req, res, next) {
         const {uid, nickname} = req.body;
-        const user = await User.create({uid, nickname});
+        const user = await User.create({ uid, nickname });
         return res.json(user)
     };
 
     async getUser(req, res, next) {
         const { uid } = req.params;
-        const user = await User.findOne({ where: {uid} })
+        const user = await User.findOne({ where: { uid } })
+        return res.json(user)
+    }
+
+    async getUserById(req, res, next) {
+        const { id } = req.params;
+        const user = await User.findOne({ where: { id } })
         return res.json(user)
     }
 
     async updateUser(req, res, next) {
         const { nickname } = req.body;
         const { uid } = req.params
-        const user = await User.findOne({ where: {uid: uid} })
+        const user = await User.findOne({ where: { uid: uid } })
         const newUser = await user.update({ uid, nickname })
         return res.json(newUser)
     }

@@ -71,9 +71,7 @@ const Test = sequelize.define('test', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING },
     description: { type: DataTypes.TEXT },
-    questions: {type: DataTypes.TEXT },
-    answers:  { type: DataTypes.TEXT },
-    correct_answers: { type: DataTypes.TEXT },
+    questions: {type: DataTypes.TEXT }
 })
 
 const TestResults = sequelize.define('testResult',{
@@ -166,6 +164,8 @@ module.exports = {
     Viki,
     SavedNews,
     Tag,
+    Test,
+    TestResults,
     Avatar,
     NewsTag,
     UserSubscriber

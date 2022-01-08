@@ -1,4 +1,4 @@
-const { UserSubscriber, User } = require('../models/models');
+const { UserSubscriber, User, News, Tag } = require('../models/models');
 
 class UserSubscriberController {
     async subscribe(req, res) {
@@ -16,13 +16,32 @@ class UserSubscriberController {
     async getUserSubscriptions(req, res) {
         const user_id = req.params.id;
         const userSubscribers = await UserSubscriber.findAll({ where: {subscriber_id: user_id}, include:[
-            {
-                model:  User,
-                as: 'author',
-                attributes: ['nickname', 'id', 'createdAt']
-            }
+                {
+                    model:  User,
+                    as: 'author',
+                    attributes: ['nickname', 'id', 'createdAt']
+                }
             ]});
         return res.json(userSubscribers)
+    }
+
+    async getUserSubscriptionsNews(req, res) {
+        const user_id = req.params.id;
+        const userSubscriptions = await UserSubscriber.findAll({ where: {subscriber_id: user_id}, include:[
+                {
+                    model:  User,
+                    as: 'author',
+                    attributes: ['nickname', 'id', 'createdAt']
+                }
+            ]});
+
+        let news = []
+        for (const subscription of userSubscriptions)
+        {
+            const authorNews = await News.findAll({where: {author_id: subscription.author_id}, include:[Tag]})
+            news.push(...authorNews)
+        }
+        return res.json(news)
     }
 
     async unsubscribe(req, res) {
