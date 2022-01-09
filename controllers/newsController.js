@@ -96,7 +96,7 @@ class NewsController {
         let news = await News.findOne({where:{id:id}, include:[
                 {
                     model: User,
-                    attributes: ['nickname', 'id']
+                    attributes: ['nickname', 'id', 'avatarId']
                 },
                 {
                     model: Tag,

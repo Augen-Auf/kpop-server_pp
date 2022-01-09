@@ -1,4 +1,5 @@
 const ApiError = require('../error/ApiError');
+const admin = require('../config/firebase-config')
 const {User, Avatar, News, Comment, Viki} = require('../models/models');
 const { Op } = require("sequelize");
 
@@ -22,11 +23,63 @@ class UserController {
     }
 
     async updateUser(req, res, next) {
-        const { nickname } = req.body;
+
         const { uid } = req.params
-        const user = await User.findOne({ where: { uid: uid } })
-        const newUser = await user.update({ uid, nickname })
-        return res.json(newUser)
+        const { nickname, email, avatarAction } = req.body;
+
+        if(!nickname && !email && !avatarAction) {
+            return next(ApiError.badRequest('Отсутсвуют данные для изменения'))
+        }
+
+        let user = await User.findOne({where: {uid}});
+
+        if(email) {
+            console.log(email)
+            await admin.auth().updateUser(uid, {email});
+        }
+
+        if(nickname) {
+           user = await user.update({nickname})
+        }
+
+        if(avatarAction) {
+
+            const avatar = await Avatar.findOne({where: {id: user.avatarId}});
+            let newAvatarId = avatar ? avatar.id : null
+            const newAvatarImage = req.files
+
+            if (newAvatarImage && newAvatarImage.img) {
+                const {name: imageName, data} = newAvatarImage.img
+                const newAvatar = avatar ? await avatar.update({
+                    name: imageName,
+                    img: data
+                }) : await Avatar.create({name: imageName, img: data});
+                newAvatarId = newAvatar.id
+            } else {
+                if (avatar && avatarAction === 'remove') {
+                    newAvatarId = null
+                    await avatar.destroy();
+                }
+            }
+
+            user = await user.update({avatarId: newAvatarId})
+        }
+
+        return res.json(user)
+    }
+
+    async changePassword(req, res, next) {
+        const { uid } = req.params;
+
+        const { newPassword } = req.body
+        console.log(newPassword)
+        if(!newPassword) {
+            return next(ApiError.badRequest('Отсутсвуют данные для изменения'))
+        }
+
+        await admin.auth().updateUser(uid, {password: newPassword});
+
+        return res.json({'result': true})
     }
 
     async getUserNews(req, res, next) {

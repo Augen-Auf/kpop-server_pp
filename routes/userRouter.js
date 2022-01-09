@@ -5,9 +5,9 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/', userController.createUser);
 router.get('/:uid', userController.getUser);
-router.put('/:uid', userController.updateUser);
+router.put('/:uid/change', userController.updateUser);
 router.get('/info/:id', userController.getUserById)
-// router.post('/password/change', userController.changePassword);
+router.post('/:uid/password/change', userController.changePassword);
 router.post('/news', userController.getUserNews);
 router.post('/vikis', userController.getUserVikis);
 router.post('/comments', userController.getUserComments);
