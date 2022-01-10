@@ -40,7 +40,7 @@ class VikiController {
 
     async getOne(req, res) {
         const id = req.params.id;
-        const viki = await Viki.findOne({where: {id:id}, include: {model: User, attributes:['id', 'name']}});
+        const viki = await Viki.findOne({where: {id:id}, include: {model: User, attributes:['id', 'nickname']}});
         return res.json(viki)
     }
 

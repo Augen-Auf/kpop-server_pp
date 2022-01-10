@@ -19,7 +19,7 @@ class UserSubscriberController {
                 {
                     model:  User,
                     as: 'author',
-                    attributes: ['nickname', 'id', 'createdAt']
+                    attributes: ['nickname', 'avatarId', 'id', 'createdAt']
                 }
             ]});
         return res.json(userSubscribers)
@@ -31,7 +31,7 @@ class UserSubscriberController {
                 {
                     model:  User,
                     as: 'author',
-                    attributes: ['nickname', 'id', 'createdAt']
+                    attributes: ['nickname', 'id', 'avatarId', 'createdAt']
                 }
             ]});
 
